@@ -1,0 +1,34 @@
+@startuml
+LoginView ..> LoginViewModel
+HomeView ..> HomeViewModel
+LoginViewModel ..> DBService
+LoginViewModel ..> HomeView
+HomeViewModel ..> LoginView
+
+class LoginView {
+__ private data __
+Entry id
+Entry pw
+Button login
+}
+
+class HomeView {
+__ private data __
+Button logout
+}
+
+class LoginViewModel {
+__ public data __
+string id
+string pw
+}
+
+class HomeViewModel {
++ Logout()
+}
+
+class DBService {
++ Login(string id, string pw)
+}
+
+@enduml

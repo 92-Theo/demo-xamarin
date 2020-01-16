@@ -1,0 +1,9 @@
+@startuml 시퀀스다이어그램
+autonumber
+
+User -> App : 로그인 시도
+App -> DB : 유저 조회
+DB --> App : 유저 조회 결과
+App --> User : 로그인 결과
+
+@enduml
