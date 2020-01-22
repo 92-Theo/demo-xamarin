@@ -3,15 +3,8 @@
 # Edit at https://www.gitignore.io/?templates=xamarinstudio
 
 ### XamarinStudio ###
-bin\
-obj\
-bin/
-obj/
-*.userprefs
-.packages
 .vs
 .vs\
 .vs/
-Resource.designer.cs
 
 # End of https://www.gitignore.io/api/xamarinstudio
