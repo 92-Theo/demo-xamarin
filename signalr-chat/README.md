@@ -1,4 +1,4 @@
-Using IIS, wcf, mariadb
+Using IIS, ASP.NET Core
 
 function
-1. login
+1. echo chat by WebSocket
