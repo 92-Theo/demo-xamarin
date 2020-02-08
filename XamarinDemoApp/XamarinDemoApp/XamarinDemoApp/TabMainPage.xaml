@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage
+    x:Class="XamarinDemoApp.TabMainPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:local="clr-namespace:XamarinDemoApp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="clr-namespace:Plugin.Badge.Abstractions;assembly=Plugin.Badge.Abstractions"
+    mc:Ignorable="d">
+    <ContentPage Title="차량" p:TabBadge.BadgeText="1">
+        <local:ProgressArc ArcThickness="20" Progress="0.5" />
+    </ContentPage>
+    <ContentPage Title="제어" p:TabBadge.BadgeText="2">
+        <local:ProgressRing Progress="0.5" RingThickness="20" />
+    </ContentPage>
+
+</TabbedPage>

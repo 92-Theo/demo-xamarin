@@ -31,14 +31,16 @@ namespace Chat.Models.Managers
 
         public void PushChatPage()
         {
+            Log.Write(TAG, "PushChatPage");
             foreach (var page in Application.Current.MainPage.Navigation.NavigationStack)
             {
                 if (page  == ChatPage)
                 {
+                    Log.Write(TAG, "PushChatPage Exit");
                     return;
                 }
             }
-
+            Log.Write(TAG, "PushChatPage Run");
             Device.BeginInvokeOnMainThread(() => Application.Current.MainPage.Navigation.PushAsync(ChatPage));
         }
     }

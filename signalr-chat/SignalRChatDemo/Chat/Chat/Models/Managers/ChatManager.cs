@@ -37,7 +37,7 @@ namespace Chat.Models.Managers
                 return;
             }
 
-            Open(host);
+            await Open(host);
         }
 
         public void Chat (string message)
@@ -51,21 +51,24 @@ namespace Chat.Models.Managers
         }
        
 
-        private async void Open (string host)
+        private async Task Open (string host)
         {
             if (Sock != default)
             {
                 Log.Write(TAG, "Open NODEFAULT");
-                if (Sock.IsRunning)
+                if (Sock.IsStarted)
                 {
-                    Log.Write(TAG, "Open RUNNING");
+                    Log.Write(TAG, "Open IsStarted");
                     if (Sock.Url.ToString() == host)
                     {
                         Log.Write(TAG, "Open SAME HOST");
-                        ViewManager.Instance.PushChatPage();
+                        if (Sock.IsRunning)
+                        {
+                            Log.Write(TAG, "Open RUNNING");
+                            ViewManager.Instance.PushChatPage();
+                        }
                         return;
                     }
-
                     Log.Write(TAG, "Open REQUEST STOP");
                     await Sock.Stop(WebSocketCloseStatus.Empty, "");
                 }

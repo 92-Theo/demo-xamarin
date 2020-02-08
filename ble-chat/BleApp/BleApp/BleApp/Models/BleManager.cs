@@ -162,27 +162,45 @@ namespace BleApp.Models
             if (ble == null)
                 return false;
             ChattingBle = ble;
-            
-            var services = await ChattingBle.Device.GetServicesAsync();
+
+                var services = await ChattingBle.Device.GetServicesAsync();
             foreach (var service in services)
             {
                 var characteristics = await service.GetCharacteristicsAsync();
                 foreach (var characteristic in characteristics)
                 {
-                    if (characteristic.Properties.HasFlag(CharacteristicPropertyType.Write | CharacteristicPropertyType.WriteWithoutResponse))
+                    try
                     {
-                        Log.Write(TAG, $"Add WriteCharacteristic {characteristic.Properties}");
-                        WriteCharacteristic = characteristic;
-                    }
-
-                    if (characteristic.Properties.HasFlag(CharacteristicPropertyType.Notify))
-                    {
-                        ReadCharacteristic = characteristic;
+                        Log.Write(TAG, $"read try {characteristic.Uuid} {characteristic.Id}");
                         characteristic.ValueUpdated += Read;
                         await characteristic.StartUpdatesAsync();
                     }
+                    catch (Exception e)
+                    {
+                        Log.Write(TAG, $"StartChat {e.Message}");
+                    }
                 }
             }
+            return false;
+            //foreach (var service in services)
+            //{
+            //    var characteristics = await service.GetCharacteristicsAsync();
+            //    foreach (var characteristic in characteristics)
+            //    {
+            //        if (characteristic.Properties.HasFlag(CharacteristicPropertyType.Write | CharacteristicPropertyType.WriteWithoutResponse))
+            //        {
+            //            Log.Write(TAG, $"Add WriteCharacteristic {characteristic.Properties}");
+            //            WriteCharacteristic = characteristic;
+            //        }
+
+            //        if (characteristic.Properties.HasFlag(CharacteristicPropertyType.Notify))
+            //        {
+            //            ReadCharacteristic = characteristic;
+            //            characteristic.ValueUpdated += Read;
+            //            await characteristic.StartUpdatesAsync();
+            //        }
+            //    }
+            //}
 
             if (ReadCharacteristic == default || WriteCharacteristic == default)
             { 

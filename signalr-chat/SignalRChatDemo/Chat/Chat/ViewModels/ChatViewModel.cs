@@ -71,7 +71,7 @@ namespace Chat.ViewModels
 
             Models.Managers.ChatManager.Instance.Chat(Message);
 
-            MessageBox.Add ($"[SEMD]{Message}")
+            MessageBox.Add($"[SEMD]{Message}");
         }
   
     }

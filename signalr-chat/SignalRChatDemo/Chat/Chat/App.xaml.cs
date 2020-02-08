@@ -11,7 +11,7 @@ namespace Chat
         {
             InitializeComponent();
 
-            ViewModels.LoginViewModel.Instance.Host = "ws://192.168.10.132:51000/ws";
+            ViewModels.LoginViewModel.Instance.Host = "ws://192.168.1.59:51000/ws";
             MainPage = new NavigationPage(new Views.LoginPage());
         }
 
