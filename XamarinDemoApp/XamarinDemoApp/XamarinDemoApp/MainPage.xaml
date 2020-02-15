@@ -5,16 +5,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:d="http://xamarin.com/schemas/2014/forms/design"
     xmlns:local="clr-namespace:XamarinDemoApp"
+    xmlns:control="clr-namespace:ProgressRingControl.Forms.Plugin;assembly=ProgressRing.Forms.Plugin"
     xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
     <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-        <local:LabelBadge
-            BadgeColor="Blue"
-            HorizontalOptions="EndAndExpand"
-            Text="99"
-            TextColor="Yellow"
-            VerticalOptions="FillAndExpand" />
+        <!--<local:ProgressRing RingThickness="20" Progress="0.5"/>-->
+        <local:ProgressArc
+                ArcBaseColor="#C0C9CA"
+                ArcProgressColor="#7ACF73"
+                ArcStartAngle="110"
+                ArcSweepAngle="320"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand" />
+        <local:LabelBadge HorizontalOptions="FillAndExpand"
+                          TextColor="Beige"
+                          BadgeColor="Aqua"
+                          Text="9"
+                VerticalOptions="FillAndExpand" />
     </StackLayout>
 </ContentPage>

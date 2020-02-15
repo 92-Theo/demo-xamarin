@@ -7,6 +7,7 @@ using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 using System.Diagnostics;
+using GameplayKit;
 using CoreText;
 
 [assembly: ExportRenderer(typeof(LabelBadge), typeof(LabelBadgeRenderer))]
@@ -16,6 +17,8 @@ namespace XamarinDemoApp.iOS
     public class LabelBadgeRenderer : ViewRenderer
     {
         public static readonly float _RATIO_CONVERT_RADIAN = (float)Math.PI / 180;
+        public static readonly float _BADGE_START_ANGLE = 0;
+        public static readonly float _BADGE_END_ANGLE = (2.0f * (float)Math.PI);
         float? _radius;
         bool _sizeChanged = false;
 
@@ -47,61 +50,80 @@ namespace XamarinDemoApp.iOS
         {
             base.Draw(rect);
 
+            var labelBadge = (LabelBadge)this.Element;
+
             using (CGContext g = UIGraphics.GetCurrentContext())
             {
-                var labelBadge = (LabelBadge)Element;
-
+                var x0 = Bounds.GetMidX();
+                var y0 = Bounds.GetMidY();
                 var badgeColor = labelBadge.BadgeColor.ToUIColor();
                 var textColor = labelBadge.TextColor.ToUIColor();
-                var radius = (float)(Math.Min(Bounds.GetMaxX(), Bounds.GetMaxY()) / 2f);
                 var text = labelBadge.Text;
+                if (text == default)
+                    text = "";
+                var radius = (float)(Math.Min(Bounds.GetMaxX(), Bounds.GetMaxY()) / 2f);
+                var textSize = (float)(Math.Min(Bounds.GetMaxX(), Bounds.GetMaxY()) / 1.4f);
 
-                DrawLabelBadge(g, Bounds.GetMidX(), Bounds.GetMidY(), radius, text, textColor, badgeColor);
+                DrawLabelBadge(g, x0, y0, radius, text, textSize, badgeColor, textColor);
             };
         }
 
-        private void DrawLabelBadge(CGContext g, nfloat cx, nfloat cy,
+        private void DrawLabelBadge(CGContext g, nfloat x0, nfloat y0,
                                      nfloat radius, string text,
-                                     UIColor textColor, UIColor badgeColor)
+                                     nfloat textSize,
+                                     UIColor badgeColor, UIColor textColor)
         {
-            // g.SetLineWidth(lineThickness);
-            // Draw Badge
+
+            // 뱃지
             var path = new CGPath();
-            badgeColor.SetStroke();
-            path.AddArc(cx, cy, radius, 0, 360, false);
+
+            badgeColor.SetColor();
+            path.AddArc(x0, y0, radius, _BADGE_START_ANGLE, _BADGE_END_ANGLE, true);
             g.AddPath(path);
             g.DrawPath(CGPathDrawingMode.Fill);
 
-            // Draw Text
-            path = new CGPath();
-            textColor.SetStroke();
-            var attributedString = new NSAttributedString(text,
-                new CTStringAttributes
-                {
-                    Font = new CTFont("Arial", radius)
-                });
-            using (var textLine = new CTLine(attributedString))
+
+            CGRect textRect = new CGRect(Bounds.X, Bounds.Y, Bounds.Width, Bounds.Height);
             {
-                textLine.Draw(g);
+                textColor.SetFill();
+                //var textStyle = new NSMutableParagraphStyle();
+                // textStyle.Alignment = UITextAlignment.Center;
+
+                //Measure Height
+                var textFontAttributes = new UIStringAttributes()
+                {
+                    Font = UIFont.FromName("ArialMT", textSize)
+                };
+                var textTextHeight = new NSString(text).GetBoundingRect(
+                    new CGSize(textRect.Width, nfloat.MaxValue),
+                    NSStringDrawingOptions.UsesLineFragmentOrigin,
+                    textFontAttributes, null).Height;
+
+                g.SaveState();
+                g.ClipToRect(textRect);
+                var w = textRect.Width;
+                var h = textRect.Height;
+                var x = textRect.X;
+                var y = textRect.Y + ((h - textTextHeight) / 2);
+                new NSString(text).DrawString(
+                    new CGRect(x, y, w, h),
+                    textFontAttributes.Font,
+                    UILineBreakMode.WordWrap,
+                    UITextAlignment.Center);
+                g.RestoreState();
             }
+
         }
 
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
 
-            var progressArc = (ProgressArc)this.Element;
-
-            if (e.PropertyName == ProgressBar.ProgressProperty.PropertyName ||
-                e.PropertyName == ProgressArc.ArcThicknessProperty.PropertyName ||
-                e.PropertyName == ProgressArc.ArcBaseColorProperty.PropertyName ||
-                e.PropertyName == ProgressArc.ArcProgressColorProperty.PropertyName)
-            {
-                SetNeedsDisplay();
-            }
+            // var progressArc = (LabelBadge)this.Element;
 
             if (e.PropertyName == VisualElement.WidthProperty.PropertyName ||
-               e.PropertyName == VisualElement.HeightProperty.PropertyName)
+               e.PropertyName == VisualElement.HeightProperty.PropertyName ||
+               e.PropertyName == LabelBadge.TextProperty.PropertyName)
             {
                 _sizeChanged = true;
                 SetNeedsDisplay();

@@ -71,7 +71,7 @@ namespace XamarinDemoApp.iOS
                                      UIColor backColor, UIColor frontColor)
         {
             g.SetLineWidth(lineThickness);
-            
+
             // Degree to radian
             var startingAngle = startAngle * _RATIO_CONVERT_RADIAN;
             var sweepingAngle = sweepAngle * _RATIO_CONVERT_RADIAN;
