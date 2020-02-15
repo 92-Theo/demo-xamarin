@@ -6,6 +6,7 @@ using XamarinDemoApp.iOS;
 using UIKit;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
+using System.Diagnostics;
 
 [assembly: ExportRenderer(typeof(ProgressArc), typeof(ProgressArcRenderer))]
 namespace XamarinDemoApp.iOS
@@ -13,6 +14,7 @@ namespace XamarinDemoApp.iOS
     [Preserve(AllMembers = true)]
     public class ProgressArcRenderer : ViewRenderer
     {
+        public static readonly float _RATIO_CONVERT_RADIAN = (float)Math.PI / 180;
         float? _radius;
         bool _sizeChanged = false;
 
@@ -53,8 +55,10 @@ namespace XamarinDemoApp.iOS
                 var progress = (float)progressArc.Progress;
                 var backColor = progressArc.ArcBaseColor.ToUIColor();
                 var frontColor = progressArc.ArcProgressColor.ToUIColor();
+                var startAngle = (float)progressArc.ArcStartAngle;
+                var sweepAngle = (float)progressArc.ArcSweepAngle;
 
-                DrawProgressArc(g, Bounds.GetMidX(), Bounds.GetMidY(), progress, lineWidth, radius, backColor, frontColor);
+                DrawProgressArc(g, Bounds.GetMidX(), Bounds.GetMidY(), progress, lineWidth, radius, startAngle, sweepAngle, backColor, frontColor);
             };
         }
 
@@ -63,16 +67,23 @@ namespace XamarinDemoApp.iOS
         // https://stackoverflow.com/questions/34987442/drawing-pixels-on-the-screen-using-coregraphics-in-swift)
         private void DrawProgressArc(CGContext g, nfloat x0, nfloat y0,
                                      nfloat progress, nfloat lineThickness, nfloat radius,
+                                     nfloat startAngle, nfloat sweepAngle,
                                      UIColor backColor, UIColor frontColor)
         {
             g.SetLineWidth(lineThickness);
+            
+            // Degree to radian
+            var startingAngle = startAngle * _RATIO_CONVERT_RADIAN;
+            var sweepingAngle = sweepAngle * _RATIO_CONVERT_RADIAN;
+            var maxAngle = startingAngle + sweepingAngle;
+            var curAngle = startingAngle + (sweepingAngle * progress);
 
             // Draw background arc
             CGPath path = new CGPath();
 
             backColor.SetStroke();
 
-            path.AddArc(x0, y0, radius, 0, 2.0f * (float)Math.PI, true);
+            path.AddArc(x0, y0, radius, startingAngle, maxAngle, false);
             g.AddPath(path);
             g.DrawPath(CGPathDrawingMode.Stroke);
 
@@ -81,9 +92,18 @@ namespace XamarinDemoApp.iOS
 
             frontColor.SetStroke();
 
-            var startingAngle = 1.5f * (float)Math.PI;
-            pathStatus.AddArc(x0, y0, radius, startingAngle, startingAngle + progress * 2 * (float)Math.PI, false);
+            pathStatus.AddArc(x0, y0, radius, startingAngle, curAngle, false);
 
+
+#if DEBUG
+            Debug.WriteLine($"[START]======================================== ");
+            Debug.WriteLine($"DrawProgressArc ");
+            Debug.WriteLine($"Process: {progress * 100}% ");
+            Debug.WriteLine($"Degree - Start: {startAngle} Sweep {sweepAngle}");
+            Debug.WriteLine($"Radian - Start: {startingAngle} Sweep {sweepingAngle}");
+            Debug.WriteLine($"Radian - MIN: {startingAngle} MAX: {maxAngle} CUR:{curAngle} ");
+            Debug.WriteLine($"[END]======================================== ");
+#endif
             g.AddPath(pathStatus);
             g.DrawPath(CGPathDrawingMode.Stroke);
         }

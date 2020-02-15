@@ -100,6 +100,31 @@ namespace XamarinDemoApp
             set { base.SetValue(ArcThicknessProperty, value); }
         }
 
+
+        public static readonly BindableProperty ArcStartAngleProperty = BindableProperty.Create("ArcStartAngle", typeof(float),
+                                                                                                typeof(ProgressArc), 270f);
+
+        /// <summary>
+        /// Start Degree, 시계 방향으로 순(0:우, 90:하, 180: 좌, 270: 상)
+        /// </summary>
+        public float ArcStartAngle
+        {
+            get { return (float)base.GetValue(ArcStartAngleProperty); }
+            set { base.SetValue(ArcStartAngleProperty, value); }
+        }
+
+        
+        public static readonly BindableProperty ArcSweepAngleProperty = BindableProperty.Create("ArcSweepAngle", typeof(float),
+                                                                                                typeof(ProgressArc), 360f);
+        /// <summary>
+        /// Sweep Degree, ArcStartAngle부터 ArcSweepAngle까지의 Degree
+        /// </summary>
+        public float ArcSweepAngle
+        {
+            get { return (float)base.GetValue(ArcSweepAngleProperty); }
+            set { base.SetValue(ArcSweepAngleProperty, value); }
+        }
+
         #endregion
 
         #region Animation

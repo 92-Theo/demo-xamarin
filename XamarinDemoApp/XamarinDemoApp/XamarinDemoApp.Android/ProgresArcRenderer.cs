@@ -17,6 +17,9 @@ namespace XamarinDemoApp.Android
         private RectF _arcDrawArea;
         private bool _sizeChanged = false;
 
+        
+
+        [Obsolete]
         public ProgressArcRenderer()
         {
             SetWillNotDraw(false);
@@ -54,18 +57,21 @@ namespace XamarinDemoApp.Android
             var backColor = progressArc.ArcBaseColor;
             var frontColor = progressArc.ArcProgressColor;
             var progress = (float)progressArc.Progress;
-            DrawProgressArc(canvas, progress, backColor, frontColor);
+            var arcStartAngle = (float)progressArc.ArcStartAngle;
+            var arcSweepAngle = (float)progressArc.ArcSweepAngle;
+            DrawProgressArc(canvas, progress, arcStartAngle, arcSweepAngle, backColor, frontColor);
         }
 
         private void DrawProgressArc(Canvas canvas, float progress,
+                                      float arcStartAngle, float arcSweepAngle,
                                       Color arcBaseColor,
                                       Color arcProgressColor)
         {
             _paint.Color = arcBaseColor.ToAndroid();
-            canvas.DrawArc(_arcDrawArea, 270, 360, false, _paint);
+            canvas.DrawArc(_arcDrawArea, arcStartAngle, arcSweepAngle, false, _paint);
 
             _paint.Color = arcProgressColor.ToAndroid();
-            canvas.DrawArc(_arcDrawArea, 270, 360 * progress, false, _paint);
+            canvas.DrawArc(_arcDrawArea, arcStartAngle, arcSweepAngle * progress, false, _paint);
         }
 
         protected override void OnElementPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

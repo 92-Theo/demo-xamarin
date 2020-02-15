@@ -9,7 +9,7 @@
     xmlns:p="clr-namespace:Plugin.Badge.Abstractions;assembly=Plugin.Badge.Abstractions"
     mc:Ignorable="d">
     <ContentPage Title="차량" p:TabBadge.BadgeText="1">
-        <local:ProgressArc ArcThickness="20" Progress="0.5" />
+        <local:ProgressArc ArcThickness="20" Progress="0" />
     </ContentPage>
     <ContentPage Title="제어" p:TabBadge.BadgeText="2">
         <local:ProgressRing Progress="0.5" RingThickness="20" />

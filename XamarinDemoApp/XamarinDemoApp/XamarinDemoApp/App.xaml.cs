@@ -10,8 +10,8 @@ namespace XamarinDemoApp
         {
             InitializeComponent();
 
-            // MainPage = new MainPage();
-            MainPage = new TabMainPage();
+            MainPage = new MainPage();
+            //MainPage = new TabMainPage();
         }
 
         protected override void OnStart()
